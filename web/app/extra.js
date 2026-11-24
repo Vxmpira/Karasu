@@ -34,7 +34,7 @@
   X.companyHTML = function (sym) {
     var c = X.company(sym); if (!c) return "";
     var where = c.st ? '<button type="button" class="btn" data-x="st:' + c.st + '">See ' + esc(c.st) + " on the map</button>" : c.c ? '<button type="button" class="btn" data-x="co:' + esc(c.c) + '">See ' + esc(c.c) + " on the map</button>" : "";
-    return '<div class="tk-head"><span class="big">' + esc(c.s) + "</span><div><h2>" + esc(c.n) + '</h2><div class="sub">' + esc(c.sec || "Listed company") + "</div></div></div>" + X.companyFacts(sym) +
+    return '<div class="tk-head"><span class="big">' + esc(c.s) + "</span><div><h2>" + esc(c.n) + '</h2><div class="sub">' + esc(c.sec || "Listed company") + "</div></div></div>" + (X.tickerTop ? X.tickerTop(c.s) : "") + X.companyFacts(sym) +
       '<div class="grid2"><div class="blk"><h3 class="kick">No data points tied yet</h3><p>Nothing on the map touches ' + esc(c.s) + ' yet. Data points attach on their own as feeds connect: a contract award names the company, a shipment record names the importer, a filing names the customer.</p><p class="note">The company is listed here so its page is ready the day the first data point lands.</p><div style="margin-top:12px">' + where + '</div></div><div class="blk"><h3 class="kick">This page adds at launch</h3><div class="chips">' + TK_ADDS.map(function (x) { return '<span class="chip" style="border-style:dashed">' + x + "</span>"; }).join("") + "</div></div></div>";
   };
   X.tkRows = function (q, filter) {
@@ -137,6 +137,7 @@
     var rel = t.k / d.k0, now = Date.now(), n = 0, sz = rel < 6 ? 3.4 : rel < 16 ? 4.8 : 6.2, names = [];
     for (var i = 0; i < fleet.length; i++) {
       var s = fleet[i]; if (s.sim) simPos(s, now);
+      if (X.shipPass && !X.shipPass(s)) { s.vis = false; continue; }
       var b = proj([s.lon, s.lat]), x = b[0] * t.k + t.x, y = b[1] * t.k + t.y;
       s.sx = x; s.sy = y; s.vis = x > -8 && x < d.W + 8 && y > -8 && y < d.H + 8; if (!s.vis) continue; n++;
       var c = COL[s.type] || GREY, sel = state.ship && state.ship.id === s.id;
@@ -163,7 +164,7 @@
   function shipHTML(s) {
     var now = Date.now(), layer = s.type === "Tanker" ? "energy" : "goods", quiet = isQuiet(s, now), still = s.sog < .5, stat = quiet ? "Silent" : still ? (NAV[s.nav] && s.nav !== 0 ? NAV[s.nav] : "Stopped") : (NAV[s.nav] || "Under way");
     var stillH = s.stillH || (s.still ? (now - s.still) / 3.6e6 : 0);
-    var h = '<div class="card"><div class="card-top"><span class="lyrchip" style="--c:' + (COL[s.type] || GREY) + '">' + X.glyph(layer, true) + esc(s.sub || s.type) + '</span><span class="soonchip"' + (s.sim ? "" : ' style="border-style:solid;color:var(--green);border-color:var(--green)"') + ">" + (s.sim ? "Simulated" : s.real ? "From the reference post" : "Live") + '</span><span class="when">' + (s.sim ? "" : s.real ? "Nov 4th" : ago(s.ts)) + "</span></div><h2>" + esc(s.name || "Unnamed ship") + "</h2>";
+    var h = '<div class="card"><div class="card-top"><span class="lyrchip" style="--c:' + (COL[s.type] || GREY) + '">' + X.glyph(layer, true) + esc(s.sub || s.type) + '</span><span class="soonchip"' + (s.sim ? "" : ' style="border-style:solid;color:var(--green);border-color:var(--green)"') + ">" + (s.sim ? "Simulated" : s.real ? "From the reference post" : "Live") + "</span>" + (X.star ? X.star("ships", s.id) : "") + '<span class="when">' + (s.sim ? "" : s.real ? "Nov 4th" : ago(s.ts)) + "</span></div><h2>" + esc(s.name || "Unnamed ship") + "</h2>";
     if (s.sim) h += '<p class="simnote">Simulated ship. Every value on this card is generated to show the layout. Real ships replace these when the ship feed has its key.</p>';
     var what = s.real ? X.byId.albateen.what : (s.sub || s.type) + (s.len ? ", " + s.len + " m long" : "") + ". " + (still ? stat + (stillH ? " for " + span(stillH) : "") : stat + " at " + s.sog.toFixed(1) + " knots on course " + Math.round(s.cog) + "°") + (s.dest ? ", " + (still ? "listed for " : "bound for ") + esc(s.dest) : "") + "." + (s.draught ? " Draught " + s.draught.toFixed(1) + " m." : "");
     var spec = [["Status", stat], ["Speed", s.sog.toFixed(1) + " knots"], ["Course", still ? null : Math.round(s.cog) + "°"], ["Draught", s.draught ? s.draught.toFixed(2) + " m" + (s.real ? " of 15.37 m" : "") : null], ["Destination", s.dest], ["Arrival", s.eta], ["Size", s.real ? "114,637 tonnes deadweight" : s.len ? s.len + " m by " + s.beam + " m" : null], ["Flag", s.flag], ["MMSI", s.sim || s.real ? null : s.id], ["IMO", s.imo], ["Call sign", s.callsign], ["Position", Math.abs(s.lat).toFixed(3) + "°" + (s.lat >= 0 ? "N" : "S") + " " + Math.abs(s.lon).toFixed(3) + "°" + (s.lon >= 0 ? "E" : "W")], ["Last signal", s.real ? "Nov 4th, 21:31 UTC" : s.sim ? null : ago(s.ts)]].filter(function (x) { return x[1]; });
@@ -192,7 +193,7 @@
   var polling = false, pollT = null, serverSeen = false;
   function poll() {
     var bb = bbox(); if (!bb || polling || document.hidden) return; polling = true;
-    fetch("api/ships?limit=1800&bbox=" + bb).then(function (r) { if (!r.ok) throw new Error("none"); return r.json(); }).then(function (j) {
+    fetch("/api/ships?limit=1800&bbox=" + bb).then(function (r) { if (!r.ok) throw new Error("none"); return r.json(); }).then(function (j) {
       polling = false; serverSeen = true;
       if (!j.live) { liveNote = j.reason || ""; if (mode === "live") { mode = "sim"; fleet = buildSim(); X.renderLayers(); } return; }
       var first = mode !== "live"; mode = "live"; liveInfo = { total: j.total, at: j.at || Date.now() };
@@ -238,11 +239,11 @@
   X.sourcesExtra = function () {
     if (!APIS.length) return "";
     var n = { none: 0, free: 0, pick: 0 }; APIS.forEach(function (a) { n[a.key]++; });
-    return '<h2 style="margin-top:40px">API record</h2><p class="lede">Every outside service the terminal needs, with the name of the setting each key goes into. Keys are added on the server in one pass. None are stored in this page.</p>' +
-      X.kpisHTML([["Need no key", String(n.none), "Public data. These can be built now."], ["Need a free key", String(n.free), "A sign-up each. No cost."], ["Need a decision", String(n.pick), "Paid, or a vendor to pick."], ["Built so far", String(APIS.filter(function (a) { return a.status === "wired"; }).length), "Ships and the company list."]]) +
-      '<div class="blk" style="padding:4px 10px;margin-top:18px"><div class="scroller"><table class="tbl"><thead><tr><th>API</th><th>What it feeds</th><th>Key</th><th>Setting name</th><th>Status</th><th>Notes</th></tr></thead><tbody>' + APIS.map(function (a) {
+    return '<h2 style="margin-top:40px">API record</h2><p class="lede">Every outside service the terminal and the site need, with the name of the setting each key or link goes into. Keys are added on the server in one pass. None are stored in this page.</p>' +
+      X.kpisHTML([["Need no key", String(n.none), "Public data. These can be built now."], ["Need a free key", String(n.free), "A sign-up each. No cost."], ["Need a decision", String(n.pick), "Paid, or a vendor to pick."], ["Checked with the provider", String(APIS.filter(function (a) { return a.checked; }).length), "The rest are confirmed as each feed is built."]]) +
+      '<div class="blk" style="padding:4px 10px;margin-top:18px"><div class="scroller"><table class="tbl"><thead><tr><th>Service</th><th>What it feeds</th><th>Key</th><th>Setting name</th><th>Status</th><th>Checked</th><th>Notes</th></tr></thead><tbody>' + APIS.map(function (a) {
         var set = keySet && keySet[a.id];
-        return '<tr><td><b style="font-weight:500">' + esc(a.name) + '</b><div class="sm">' + esc(a.layer) + '</div></td><td class="sm">' + esc(a.feeds) + '</td><td><span class="keyst ' + (set ? "set" : KEYL[a.key][1]) + '">' + (set ? "Key added" : KEYL[a.key][0]) + '</span></td><td class="mn" style="font-size:11.5px">' + esc(a.env || "") + '</td><td class="sm">' + (set && a.status === "wired" && a.key !== "none" ? "Live" : a.status === "wired" && a.key === "none" ? "Built, not yet run on the server" : STL[a.status]) + '</td><td class="sm">' + esc(a.note) + "</td></tr>";
+        return '<tr><td><b style="font-weight:500">' + esc(a.name) + '</b><div class="sm">' + esc(a.layer) + '</div></td><td class="sm">' + esc(a.feeds) + '</td><td><span class="keyst ' + (set ? "set" : KEYL[a.key][1]) + '">' + (set ? "Key added" : KEYL[a.key][0]) + '</span></td><td class="mn" style="font-size:11.5px">' + esc(a.env || "") + '</td><td class="sm">' + (set && a.status === "wired" && a.key !== "none" ? "Live" : a.status === "wired" && a.key === "none" ? "Built, not yet run on the server" : STL[a.status]) + '</td><td class="sm" style="white-space:nowrap">' + esc(a.checked || "") + '</td><td class="sm">' + esc(a.note) + "</td></tr>";
       }).join("") + "</tbody></table></div></div>";
   };
 
@@ -257,7 +258,8 @@
     CO.forEach(function (c) { coBy[c.s] = c; if (c.st) (coState[c.st] = coState[c.st] || []).push(c); if (c.c) (coCountry[c.c] = coCountry[c.c] || []).push(c); });
     coReady = true; refresh();
   }).catch(function () {});
-  fetch("apis.json").then(function (r) { return r.json(); }).then(function (a) { APIS = a; if (state.view === "sources") X.renderSources(); return fetch("api/apis"); })
+  fetch("apis.json").then(function (r) { return r.json(); }).then(function (a) { APIS = a; if (state.view === "sources") X.renderSources(); return fetch("/api/apis"); })
     .then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j && j.set) { keySet = j.set; if (state.view === "sources") X.renderSources(); } }).catch(function () {});
   X.ships = { fleet: function () { return fleet; }, mode: function () { return mode; }, select: setShip, at: shipAt, region: setRegion };
+  X.companies = function () { return CO; }; X.capText = cap; X.refresh = refresh;
 })();

@@ -13,7 +13,10 @@ One-time setup. After this, pushes to `main` go live through the existing deploy
    ```
    If the repo is private, the box needs a read-only deploy key first.
 
-3. **Keys.** Open `.env` and fill in what you have. Every setting is listed in `docs/APIS.md`. The terminal runs with none of them; each key switches one feed on.
+3. **Settings.** Open `.env` and fill in what you have. Every setting is listed in `docs/APIS.md`. The site runs with none of them; each one switches something on.
+   - Set `ADMIN_TOKEN` to a long random value now. It is what lets you move an account to the paid plan:
+     `ADMIN_TOKEN=... node scripts/set-plan.mjs someone@example.com paid`
+   - Accounts are saved in `data/store.json` and contact messages in `data/contact.jsonl`. Add both to the box's backups.
 
 4. **Service.**
    ```
@@ -40,6 +43,8 @@ One-time setup. After this, pushes to `main` go live through the existing deploy
    ```
    SEC_USER_AGENT="Karasu your@email" npm run companies
    ```
-   This rebuilds `web/companies.json` from SEC EDGAR with every listed company and its state. It takes about 20 minutes the first time.
+   This rebuilds `web/app/companies.json` from SEC EDGAR with every listed company and its state. It takes about 20 minutes the first time.
+
+8. **Before opening sign-ups to the public.** Have a lawyer review `/terms`, `/privacy` and `/disclosure`, and fill in every placeholder in square brackets.
 
 After a key is added to `.env`: `sudo systemctl restart karasu`.
