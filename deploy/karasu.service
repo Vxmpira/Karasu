@@ -1,0 +1,17 @@
+[Unit]
+Description=Karasu terminal (Node server on 127.0.0.1:3010)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/karasu
+EnvironmentFile=/home/ubuntu/karasu/.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node server/index.mjs
+Restart=always
+RestartSec=3
+MemoryMax=800M
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,5 @@
+node_modules/
+.env
+data/sec-cache/
+*.log
+.DS_Store
