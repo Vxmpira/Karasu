@@ -85,6 +85,22 @@ export class Fleet {
     return { total: this.ships.size, matched: out.length, ships: out.slice(0, limit) };
   }
 
+  /** Count ships within `km` of a point, split by type and by moving or stopped, with the longest-stopped named. */
+  near(lat, lon, km = 80, now = Date.now()) {
+    const r = { km, tanker: { n: 0, stopped: 0 }, cargo: { n: 0, stopped: 0 }, other: { n: 0, stopped: 0 }, longest: [] };
+    const rad = Math.PI / 180, dLat = km / 111.2, dLon = dLat / Math.max(0.2, Math.cos(lat * rad));
+    for (const s of this.ships.values()) {
+      if (s.lat === undefined || Math.abs(s.lat - lat) > dLat || Math.abs(s.lon - lon) > dLon) continue;
+      const a = Math.sin(((s.lat - lat) * rad) / 2) ** 2 + Math.cos(lat * rad) * Math.cos(s.lat * rad) * Math.sin(((s.lon - lon) * rad) / 2) ** 2;
+      if (2 * 6371 * Math.asin(Math.sqrt(a)) > km) continue;
+      const g = s.type === "Tanker" ? r.tanker : s.type === "Cargo" ? r.cargo : r.other;
+      g.n++;
+      if (s.sog < 0.5) { g.stopped++; if (s.still) r.longest.push({ id: s.id, name: s.name, type: s.type, hours: (now - s.still) / 3_600_000 }); }
+    }
+    r.longest.sort((x, y) => y.hours - x.hours); r.longest = r.longest.slice(0, 3);
+    return r;
+  }
+
   /** Forget ships that have been silent longer than the drop window. */
   prune(now = Date.now()) {
     let n = 0;

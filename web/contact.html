@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact Karasu</title>
+<meta name="description" content="Ask a question about Karasu, your account or the data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/" aria-label="Karasu by BlackCrown, home">
+    <svg aria-hidden="true" width="40" height="36" viewBox="0 0 36 32" fill="none" stroke="#FF2D95" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M35 10 L28 7 L24 4 L18.5 8.5 L2 24 L22 21.5 L26 14.5 L28 12.5 Z"></path><path d="M7 28.5 L28 28.5"></path></svg>
+    <span><b>Karasu</b><i>BY BLACKCROWN</i></span>
+  </a>
+  <nav class="nav" aria-label="Site"><a href="/#read">How it reads</a><a href="/#product">What is inside</a><a href="/#coverage">Coverage</a><a href="/#pricing">Pricing</a><a href="/contact">Contact</a></nav>
+  <div class="right">
+    <a class="txt when-out" href="/login">Log in</a>
+    <a class="btn pri sm when-out" href="/signup">Create account</a>
+    <a class="txt when-in" href="/account">Account</a>
+    <a class="btn pri sm when-in" href="/app/">Open the terminal</a>
+  </div>
+</div></header>
+<main>
+<div class="split">
+  <div class="side"><p class="kick">Contact</p><h1 style="margin-top:14px">Ask us anything.</h1><p class="lede">A question about the data, a problem with your account, or a source you think belongs on the map. A person reads every message.</p>
+    <dl class="kv" style="margin-top:30px"><dt>Email</dt><dd><a href="mailto:BlackCrownVxJ.LLC@outlook.com">BlackCrownVxJ.LLC@outlook.com</a></dd><dt>Company</dt><dd>BlackCrownVxJ.LLC</dd><dt>Replies</dt><dd>Usually within two business days</dd></dl></div>
+  <div class="main">
+    <form data-form="contact" novalidate>
+      <label>Name<input type="text" name="name" id="contact-name" autocomplete="name" maxlength="80"></label>
+      <label>Email<input type="email" name="email" id="contact-email" autocomplete="email" required></label>
+      <label>What is it about<select name="topic" id="contact-topic"><option>A question about the data</option><option>My account</option><option>Billing</option><option>A source to add</option><option>Press or partnership</option><option>Something else</option></select></label>
+      <label>Message<textarea name="message" id="contact-message" required maxlength="4000"></textarea></label>
+      <p class="msg" role="alert"></p>
+      <button class="btn pri" type="submit">Send message</button>
+    </form>
+  </div>
+</div>
+
+</main>
+<footer class="foot"><div class="wrap">
+  <div><p>Karasu is a research tool made by BlackCrownVxJ.LLC. Nothing on this site or in the terminal is investment advice.</p><p style="margin-top:12px">&copy; 2026 BlackCrownVxJ.LLC</p></div>
+  <div><h3>Product</h3><a href="/#read">How it reads</a><a href="/#product">What is inside</a><a href="/#pricing">Pricing</a><a href="/signup">Create account</a></div>
+  <div><h3>Company</h3><a href="/contact">Contact</a><a href="https://blackcrownvxj.com">BlackCrown</a><a href="https://korvus.industries">Korvus</a></div>
+  <div><h3>Legal</h3><a href="/terms">Terms of Service</a><a href="/privacy">Privacy Policy</a><a href="/disclosure">Disclosure</a></div>
+</div></footer>
+<script src="/site.js"></script>
+</body>
+</html>

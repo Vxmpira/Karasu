@@ -1,4 +1,4 @@
-// Builds web/companies.json from SEC EDGAR: every company with a ticker on a US exchange,
+// Builds web/app/companies.json from SEC EDGAR: every company with a ticker on a US exchange,
 // with its exchange, headquarters city and state (or country), and industry.
 //
 // No API key. SEC asks for a contact in the User-Agent header and at most 10 requests a second.
@@ -14,7 +14,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const OUT = path.join(root, "web", "companies.json");
+const OUT = path.join(root, "web", "app", "companies.json");
 const CACHE = path.join(root, "data", "sec-cache");
 const UA = process.env.SEC_USER_AGENT;
 const limit = process.argv.includes("--limit") ? Number(process.argv[process.argv.indexOf("--limit") + 1]) : Infinity;
@@ -58,6 +58,6 @@ async function main() {
   }
   rows.sort((a, b) => b.cap - a.cap || a.s.localeCompare(b.s));
   fs.writeFileSync(OUT, JSON.stringify({ asof: new Date().toISOString().slice(0, 10) + " · SEC EDGAR", fields: FIELDS, rows: rows.map((r) => FIELDS.map((k) => r[k] ?? null)) }));
-  console.log(`Wrote ${rows.length} companies to web/companies.json. ${withState} have a US state.`);
+  console.log(`Wrote ${rows.length} companies to web/app/companies.json. ${withState} have a US state.`);
 }
 main().catch((e) => { console.error(e.message); process.exit(1); });

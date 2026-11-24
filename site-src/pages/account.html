@@ -1,0 +1,19 @@
+<!--{"file":"account.html","path":"/account","title":"Your Karasu account","desc":"Your Karasu account, plan and watchlist."}-->
+<div class="acct">
+  <nav aria-label="Account sections"><p class="kick" style="margin-bottom:12px">Account</p><a href="#profile">Profile</a><a href="#plan">Plan</a><a href="#watchlist">Watchlist</a><a href="#password">Password</a><a href="#close">Close account</a><p style="margin-top:22px"><button class="btn sm" type="button" data-do="signout">Sign out</button></p></nav>
+  <div class="main">
+    <h1 style="font-size:36px">Your account</h1>
+    <section class="sec" id="profile"><h2>Profile</h2>
+      <dl class="kv"><dt>Email</dt><dd data-me="email">...</dd><dt>Member since</dt><dd data-me="since">...</dd></dl>
+      <form data-form="name" novalidate><label>Name<input type="text" name="name" id="acct-name" autocomplete="name" maxlength="80"></label><p class="msg" role="alert"></p><button class="btn sm" type="submit">Save name</button></form></section>
+    <section class="sec" id="plan"><h2>Plan</h2>
+      <dl class="kv"><dt>Current plan</dt><dd><span class="pill" data-me="plan">...</span></dd><dt>Includes</dt><dd data-me="includes">...</dd></dl>
+      <div data-upgrade><p style="color:var(--mute)">The paid plan is not open yet. When pricing is set you will be able to upgrade here, and nothing changes for your free account in the meantime.</p></div></section>
+    <section class="sec" id="watchlist"><h2>Watchlist</h2><ul class="wl" data-wl></ul><p style="margin-top:14px"><a class="btn sm" href="/app/">Open the terminal</a></p></section>
+    <section class="sec" id="password"><h2>Password</h2>
+      <form data-form="password" novalidate><label>Current password<input type="password" name="current" id="pw-current" autocomplete="current-password" required></label><label>New password<input type="password" name="next" id="pw-next" autocomplete="new-password" minlength="10" required></label><p class="msg" role="alert"></p><button class="btn sm" type="submit">Change password</button></form>
+      <p class="alt" style="font-size:14px">Changing your password signs you out on your other devices.</p></section>
+    <section class="sec" id="close"><h2>Close account</h2><p style="color:var(--mute);margin-bottom:14px">This deletes your account and watchlist from our server. It cannot be undone.</p>
+      <form data-form="delete" novalidate><label>Type your password to confirm<input type="password" name="password" id="del-password" autocomplete="current-password" required></label><p class="msg" role="alert"></p><button class="btn sm" type="submit" style="border-color:var(--down);color:var(--down)">Delete my account</button></form></section>
+  </div>
+</div>

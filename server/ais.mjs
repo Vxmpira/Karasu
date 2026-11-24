@@ -6,7 +6,7 @@ const URL_DEFAULT = "wss://stream.aisstream.io/v0/stream";
 
 export function startAis(fleet, { key, url = URL_DEFAULT, boxes = [[[-90, -180], [90, 180]]], log = console.log } = {}) {
   const state = { live: false, reason: key ? "connecting" : "no key", connects: 0, lastError: null, stop };
-  let ws = null, timer = null, stopped = false, delay = 2000;
+  let ws = null, timer = null, sweep = null, stopped = false, delay = 2000;
   if (!key) return state;
 
   function connect() {
@@ -31,7 +31,7 @@ export function startAis(fleet, { key, url = URL_DEFAULT, boxes = [[[-90, -180],
     });
   }
   function stop() { stopped = true; clearTimeout(timer); clearInterval(sweep); try { ws && ws.close(); } catch { /* already closed */ } }
-  const sweep = setInterval(() => fleet.prune(), 15 * 60 * 1000); sweep.unref();
+  sweep = setInterval(() => fleet.prune(), 15 * 60 * 1000); sweep.unref();
   connect();
   return state;
 }

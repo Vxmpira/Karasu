@@ -1,0 +1,16 @@
+<!--{"file":"signup.html","path":"/signup","title":"Create a Karasu account","desc":"Create a free Karasu account. No card needed."}-->
+<div class="split">
+  <div class="side"><p class="kick">Free account</p><h1 style="margin-top:14px">Create your account.</h1><p class="lede">It takes a minute and needs no card.</p>
+    <ul class="ticks"><li>The full map, with ships, states and countries</li><li>Every listed company's page</li><li>The facts on every data point, with source and date</li><li>A watchlist that follows you between devices</li></ul></div>
+  <div class="main">
+    <form data-form="signup" novalidate>
+      <label>Name<input type="text" name="name" id="signup-name" autocomplete="name" maxlength="80"></label>
+      <label>Email<input type="email" name="email" id="signup-email" autocomplete="email" required></label>
+      <label>Password<input type="password" name="password" id="signup-password" autocomplete="new-password" minlength="10" required aria-describedby="pw-hint"><span id="pw-hint" style="font-size:13.5px">At least 10 characters.</span></label>
+      <label class="check"><input type="checkbox" name="agree" id="signup-agree"><span>I have read and accept the <a href="/terms">Terms of Service</a>, the <a href="/privacy">Privacy Policy</a> and the <a href="/disclosure">Disclosure</a>. I understand Karasu is a research tool and not investment advice.</span></label>
+      <p class="msg" role="alert"></p>
+      <button class="btn pri" type="submit">Create account</button>
+    </form>
+    <p class="alt">Already have an account? <a href="/login">Log in</a>.</p>
+  </div>
+</div>
