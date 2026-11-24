@@ -242,7 +242,7 @@
       X.kpisHTML([["Need no key", String(n.none), "Public data. These can be built now."], ["Need a free key", String(n.free), "A sign-up each. No cost."], ["Need a decision", String(n.pick), "Paid, or a vendor to pick."], ["Built so far", String(APIS.filter(function (a) { return a.status === "wired"; }).length), "Ships and the company list."]]) +
       '<div class="blk" style="padding:4px 10px;margin-top:18px"><div class="scroller"><table class="tbl"><thead><tr><th>API</th><th>What it feeds</th><th>Key</th><th>Setting name</th><th>Status</th><th>Notes</th></tr></thead><tbody>' + APIS.map(function (a) {
         var set = keySet && keySet[a.id];
-        return '<tr><td><b style="font-weight:500">' + esc(a.name) + '</b><div class="sm">' + esc(a.layer) + '</div></td><td class="sm">' + esc(a.feeds) + '</td><td><span class="keyst ' + (set ? "set" : KEYL[a.key][1]) + '">' + (set ? "Key added" : KEYL[a.key][0]) + '</span></td><td class="mn" style="font-size:11.5px">' + esc(a.env || "") + '</td><td class="sm">' + (set && a.status === "wired" ? "Live" : STL[a.status]) + '</td><td class="sm">' + esc(a.note) + "</td></tr>";
+        return '<tr><td><b style="font-weight:500">' + esc(a.name) + '</b><div class="sm">' + esc(a.layer) + '</div></td><td class="sm">' + esc(a.feeds) + '</td><td><span class="keyst ' + (set ? "set" : KEYL[a.key][1]) + '">' + (set ? "Key added" : KEYL[a.key][0]) + '</span></td><td class="mn" style="font-size:11.5px">' + esc(a.env || "") + '</td><td class="sm">' + (set && a.status === "wired" && a.key !== "none" ? "Live" : a.status === "wired" && a.key === "none" ? "Built, not yet run on the server" : STL[a.status]) + '</td><td class="sm">' + esc(a.note) + "</td></tr>";
       }).join("") + "</tbody></table></div></div>";
   };
 

@@ -9,7 +9,7 @@ const status = { wired: "Built, waiting for its key", planned: "To build", decis
 let md = `# Karasu API record\n\nEvery outside service the terminal needs. This file is generated from \`web/apis.json\`: edit that file, then run \`npm run apis\`.\n\nKeys go in \`.env\` on the server under the setting names below. They never go in the repo or in the page.\n\nKey requirements are as each provider documents them to the best of our knowledge. aisstream.io was checked on Nov 24th, 2026. Each line gets confirmed when its feed is built.\n\nTotals: ${apis.length} services. ${apis.filter((a) => a.key === "none").length} need no key, ${apis.filter((a) => a.key === "free").length} need a free key, ${apis.filter((a) => a.key === "pick").length} need a decision.\n`;
 for (const [k, title, lede] of groups) {
   md += `\n## ${title}\n\n${lede}\n\n| Service | What it feeds | Layers | Setting name | Status | Notes |\n|---|---|---|---|---|---|\n`;
-  for (const a of apis.filter((x) => x.key === k)) md += `| ${a.name} | ${a.feeds} | ${a.layer} | ${a.env ? "`" + a.env.split(", ").join("`, `") + "`" : ""} | ${status[a.status]} | ${a.note} |\n`;
+  for (const a of apis.filter((x) => x.key === k)) md += `| ${a.name} | ${a.feeds} | ${a.layer} | ${a.env ? "`" + a.env.split(", ").join("`, `") + "`" : ""} | ${a.status === "wired" && a.key === "none" ? "Built, not yet run on the server" : status[a.status]} | ${a.note} |\n`;
 }
 fs.mkdirSync(path.join(root, "docs"), { recursive: true });
 fs.writeFileSync(path.join(root, "docs", "APIS.md"), md);

@@ -37,7 +37,7 @@ Public data. These can be built without anything from the owner.
 
 | Service | What it feeds | Layers | Setting name | Status | Notes |
 |---|---|---|---|---|---|
-| SEC EDGAR | Every US-listed company with its state, filings, insider trades, fund holdings | Tickers, States | `SEC_USER_AGENT` | Built, waiting for its key | No key. Requires a contact email in the request header. 10 requests a second. |
+| SEC EDGAR | Every US-listed company with its state, filings, insider trades, fund holdings | Tickers, States | `SEC_USER_AGENT` | Built, not yet run on the server | No key. Requires a contact email in the request header. 10 requests a second. |
 | USAspending.gov | Federal contract awards by company, agency, state and county | Contracts, States |  | To build |  |
 | CFTC Commitments of Traders | Who is long and short each US futures contract | Energy, Livestock |  | To build |  |
 | ICE Futures Europe reports | Brent positioning by trader group | Energy |  | To build | Weekly files, no API. Parsed from the published reports. |
